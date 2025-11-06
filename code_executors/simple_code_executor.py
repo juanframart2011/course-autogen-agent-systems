@@ -10,19 +10,20 @@ llm_config = {
     "api_key": os.environ.get("OPENAI_API_KEY"),
 }
 
-assistant = AssistantAgent("assistant", llm_config)
-user_proxy = UserProxyAgent(
-    "user_proxy",
+assistant = AssistantAgent(
+    name="Assistant",
     llm_config=llm_config,
-    code_execution_config={
-        "workd_dir": "code_execution",
-        "use_docker": False,
-    },
-    human_input_mode="NEVER",
 )
 
-# start the agents
+user_proxy = UserProxyAgent(
+    name="user",
+    human_input_mode="ALWAYS",  
+    code_execution_config={
+        "work_dir": "coding",
+        "use_docker": False,  # make it True if you want to use docker
+    },
+)
+
 user_proxy.initiate_chat(
-    assistant,
-    message="What is the capital of France?",
+    assistant, message="Plot a chart of META and TESLA stock price change."
 )
